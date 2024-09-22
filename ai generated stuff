@@ -1,0 +1,196 @@
+local screenGui = Instance.new("ScreenGui")
+local frame = Instance.new("Frame")
+local inputBox = Instance.new("TextBox")
+local submitButton = Instance.new("TextButton")
+local responseLabel = Instance.new("TextLabel")
+local copyButton = Instance.new("TextButton")
+local questionsButton = Instance.new("TextButton")
+local backButton = Instance.new("TextButton")
+local questionsFrame = Instance.new("Frame")
+local questionsLabel = Instance.new("TextLabel")
+
+-- Frame setup
+frame.Size = UDim2.new(0.4, 0, 0.4, 0)
+frame.Position = UDim2.new(0.3, 0, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+frame.Parent = screenGui
+
+-- Input Box setup
+inputBox.Size = UDim2.new(0.8, 0, 0.2, 0)
+inputBox.Position = UDim2.new(0.1, 0, 0.2, 0)
+inputBox.PlaceholderText = "Type your Lua question here."
+inputBox.TextColor3 = Color3.new(1, 1, 1)
+inputBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+inputBox.Parent = frame
+
+-- Submit Button setup
+submitButton.Size = UDim2.new(0.3, 0, 0.1, 0)
+submitButton.Position = UDim2.new(0.35, 0, 0.45, 0)
+submitButton.Text = "Submit"
+submitButton.Parent = frame
+
+-- Copy Button setup
+copyButton.Size = UDim2.new(0.3, 0, 0.1, 0)
+copyButton.Position = UDim2.new(0.35, 0, 0.6, 0)
+copyButton.Text = "Copy Response"
+copyButton.Parent = frame
+
+-- Response Label setup
+responseLabel.Size = UDim2.new(0.8, 0, 0.2, 0)
+responseLabel.Position = UDim2.new(0.1, 0, 0.8, 0)
+responseLabel.Text = "Responses will appear here."
+responseLabel.TextColor3 = Color3.new(1, 1, 1)
+responseLabel.Parent = frame
+
+-- Questions Button setup
+questionsButton.Size = UDim2.new(0.2, 0, 0.1, 0)
+questionsButton.Position = UDim2.new(0.1, 0, 0.05, 0)
+questionsButton.Text = "Questions"
+questionsButton.Parent = frame
+
+-- Questions Frame setup
+questionsFrame.Size = UDim2.new(0.4, 0, 0.4, 0)
+questionsFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+questionsFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+questionsFrame.Visible = false
+questionsFrame.Parent = screenGui
+
+-- Questions Label setup
+questionsLabel.Size = UDim2.new(1, 0, 1, 0)
+questionsLabel.TextColor3 = Color3.new(1, 1, 1)
+questionsLabel.Text = [[
+Available Questions:
+- give me a print script
+- give me a infinite jump script
+- how do I create a function?
+- how do I create a table?
+- how do I use if statements?
+- how do I create a for loop?
+- how do I connect events?
+- how do I create a GUI?
+- how do I create a module?
+- how do I create a string?
+- how do I define a number?
+- how do I use booleans?
+]]
+questionsLabel.Parent = questionsFrame
+
+-- Back Button setup
+backButton.Size = UDim2.new(0.2, 0, 0.1, 0)
+backButton.Position = UDim2.new(0.8, 0, 0.05, 0)
+backButton.Text = "Back"
+backButton.Parent = questionsFrame
+
+-- Draggable Frame functionality
+local dragging
+local dragInput
+local startPos
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        startPos = frame.Position
+        dragInput = input.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragInput
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+-- Function to process Lua-related questions
+local function processInput(input)
+    input = input:lower()
+    if input:find("give me a print script") then
+        return "print('print script! hope you enjoy')"
+    elseif input:find("give me a infinite jump script") then
+        return [[
+-- sure!
+
+-- Infinite Jump Script
+local UserInputService = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid") or nil
+
+-- Function to allow infinite jump
+local function onJumpRequest()
+    if humanoid then
+        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end
+
+-- Listen for jump input
+UserInputService.JumpRequest:Connect(onJumpRequest)
+
+-- Listen for character respawn to ensure the humanoid reference is updated
+player.CharacterAdded:Connect(function(character)
+    humanoid = character:FindFirstChildOfClass("Humanoid")
+end)
+]]
+    elseif input:find("how do I create a function") then
+        return "You can define a function using `function functionName() ... end`."
+    elseif input:find("how do I create a table") then
+        return "Tables are created using `myTable = {}`. You can store values like `myTable[1] = 'Hello'`."
+    elseif input:find("how do I use if statements") then
+        return "Use `if condition then ... end` to execute code conditionally."
+    elseif input:find("how do I create a for loop") then
+        return "For loops look like this: `for i = 1, 10 do ... end`."
+    elseif input:find("how do I connect events") then
+        return "Connect events using `event.OnEvent:Connect(function() ... end)`."
+    elseif input:find("how do I create a gui") then
+        return "To create a GUI, use `Instance.new('ScreenGui')` and add components like Frames and Buttons."
+    elseif input:find("how do I create a module") then
+        return "Modules are created with `local module = {}` and require them using `local myModule = require(script.ModuleName)`."
+    elseif input:find("how do I create a string") then
+        return "Strings can be created using quotes: `local myString = 'Hello'`."
+    elseif input:find("how do I define a number") then
+        return "Numbers can be defined as: `local myNumber = 5`."
+    elseif input:find("how do I use booleans") then
+        return "Booleans can be `true` or `false`: `local myBool = true`."
+    else
+        return "I'm not sure about that. Try asking something specific about Lua!"
+    end
+end
+
+-- Button click event
+submitButton.MouseButton1Click:Connect(function()
+    local userInput = inputBox.Text
+    if userInput ~= "" then
+        local response = processInput(userInput)
+        responseLabel.Text = response
+    else
+        responseLabel.Text = "Please enter a question."
+    end
+end)
+
+-- Copy response functionality
+copyButton.MouseButton1Click:Connect(function()
+    local responseText = responseLabel.Text
+    if responseText ~= "" then
+        setclipboard(responseText) -- Copies the response to clipboard
+        responseLabel.Text = "Response copied!"
+    else
+        responseLabel.Text = "No response to copy."
+    end
+end)
+
+-- Toggle Questions Frame visibility
+questionsButton.MouseButton1Click:Connect(function()
+    questionsFrame.Visible = true
+end)
+
+-- Back Button functionality
+backButton.MouseButton1Click:Connect(function()
+    questionsFrame.Visible = false
+end)
+
+-- Make sure the GUI is shown
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
